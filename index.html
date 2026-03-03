@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#070609" />
+    <title>Secret Message</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Marck+Script&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="screen" aria-label="Секретное сообщение">
+      <section class="card" aria-live="polite">
+        <div class="fx" aria-hidden="true"></div>
+        <header class="header">
+          <h1 class="title">Введи ШИФР...</h1>
+        </header>
+
+        <section class="entry" id="entry">
+          <form class="pin" id="pinForm" autocomplete="off" novalidate>
+            <div class="pinRow" role="group" aria-label="ПИН-код из 4 цифр">
+              <input
+                class="pinCell"
+                id="d1"
+                name="d1"
+                type="tel"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                maxlength="1"
+                aria-label="Цифра 1"
+                autocomplete="off"
+              />
+              <input
+                class="pinCell"
+                id="d2"
+                name="d2"
+                type="tel"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                maxlength="1"
+                aria-label="Цифра 2"
+                autocomplete="off"
+              />
+              <input
+                class="pinCell"
+                id="d3"
+                name="d3"
+                type="tel"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                maxlength="1"
+                aria-label="Цифра 3"
+                autocomplete="off"
+              />
+              <input
+                class="pinCell"
+                id="d4"
+                name="d4"
+                type="tel"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                maxlength="1"
+                aria-label="Цифра 4"
+                autocomplete="off"
+              />
+            </div>
+
+            <div class="progress" aria-hidden="true">
+              <span class="dot" data-i="0"></span>
+              <span class="dot" data-i="1"></span>
+              <span class="dot" data-i="2"></span>
+              <span class="dot" data-i="3"></span>
+            </div>
+
+            <p class="hint" id="hint" aria-live="polite"></p>
+          </form>
+        </section>
+
+        <section class="reveal" id="reveal" aria-hidden="true">
+          <p class="revealText">Твое упорство вознаграждено. Я жду тебя здесь:</p>
+          <p class="address" id="addressText">X = 51.173530, Y = 71.381255</p>
+          <a class="mapBtn" id="mapBtn" href="#" target="_blank" rel="noopener noreferrer">Открыть в картах</a>
+        </section>
+      </section>
+    </main>
+
+    <script src="./script.js" defer></script>
+  </body>
+</html>
+

@@ -1,0 +1,521 @@
+:root {
+  --bg0: #050407;
+  --bg1: #0b060a;
+  --glow: rgba(155, 24, 54, 0.28);
+  --glow2: rgba(255, 88, 128, 0.18);
+  --card: rgba(12, 9, 12, 0.62);
+  --stroke: rgba(255, 255, 255, 0.10);
+  --text: rgba(255, 255, 255, 0.92);
+  --muted: rgba(255, 255, 255, 0.64);
+  --danger: rgba(255, 88, 128, 0.95);
+  --ok: rgba(160, 255, 214, 0.92);
+
+  --radius: 22px;
+  --shadow: 0 18px 60px rgba(0, 0, 0, 0.55);
+
+  --tap: 56px;
+  --cell: 62px;
+  --gap: 12px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--text);
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: radial-gradient(1200px 800px at 50% 42%, rgba(155, 24, 54, 0.10), transparent 55%),
+    radial-gradient(900px 600px at 50% 45%, rgba(255, 88, 128, 0.07), transparent 60%),
+    linear-gradient(180deg, var(--bg1), var(--bg0));
+  background-size: 150% 150%, 140% 140%, 100% 100%;
+  background-position: 50% 45%, 50% 52%, 0 0;
+  animation: bgDrift 14s ease-in-out infinite alternate;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  touch-action: manipulation;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: -30%;
+  pointer-events: none;
+  background:
+    radial-gradient(closest-side at 30% 40%, rgba(255, 255, 255, 0.06), transparent 60%),
+    radial-gradient(closest-side at 70% 55%, rgba(255, 88, 128, 0.08), transparent 62%),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 3px);
+  opacity: 0.22;
+  mix-blend-mode: overlay;
+  filter: blur(0.2px);
+  animation: grainWander 10s linear infinite;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: -40%;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 18% 25%, rgba(255, 255, 255, 0.11) 0 1px, transparent 2px),
+    radial-gradient(circle at 62% 18%, rgba(255, 255, 255, 0.09) 0 1px, transparent 2px),
+    radial-gradient(circle at 82% 62%, rgba(255, 255, 255, 0.08) 0 1px, transparent 2px),
+    radial-gradient(circle at 34% 78%, rgba(255, 255, 255, 0.07) 0 1px, transparent 2px);
+  background-size: 420px 420px, 520px 520px, 620px 620px, 720px 720px;
+  opacity: 0.16;
+  filter: blur(0.2px);
+  transform: translate3d(0, 0, 0);
+  animation: starsDrift 18s linear infinite;
+}
+
+.screen {
+  height: 100svh;
+  width: 100%;
+  display: grid;
+  place-items: center;
+  position: relative;
+  isolation: isolate;
+  padding:
+    max(18px, env(safe-area-inset-top))
+    max(16px, env(safe-area-inset-right))
+    max(18px, env(safe-area-inset-bottom))
+    max(16px, env(safe-area-inset-left));
+}
+
+.card {
+  width: min(520px, 100%);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, rgba(18, 12, 18, 0.66), rgba(10, 7, 10, 0.52));
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 22px 18px 18px;
+  position: relative;
+  overflow: hidden;
+  transform: translateZ(0);
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background: radial-gradient(circle at 50% 40%, var(--glow), transparent 52%);
+  filter: blur(10px);
+  opacity: 0.95;
+  pointer-events: none;
+  animation: glowPulse 4.8s ease-in-out infinite;
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(255, 255, 255, 0.06), transparent 50%),
+    linear-gradient(115deg, transparent 0 35%, rgba(255, 255, 255, 0.07) 45%, transparent 55% 100%);
+  background-size: 100% 100%, 240% 240%;
+  background-position: 0 0, 30% 40%;
+  pointer-events: none;
+  opacity: 0.85;
+  animation: sweep 7.2s ease-in-out infinite;
+}
+
+.fx {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.fx::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: var(--radius);
+  background:
+    radial-gradient(circle at 18% 22%, rgba(255, 88, 128, 0.12), transparent 48%),
+    radial-gradient(circle at 78% 76%, rgba(155, 24, 54, 0.16), transparent 52%),
+    conic-gradient(from 210deg at 50% 50%, rgba(255, 255, 255, 0.06), transparent 20%, rgba(255, 88, 128, 0.04), transparent 55%, rgba(255, 255, 255, 0.05));
+  opacity: 0.55;
+  filter: blur(0.6px);
+  mask: linear-gradient(#000, #000) content-box, linear-gradient(#000, #000);
+  -webkit-mask: linear-gradient(#000, #000) content-box, linear-gradient(#000, #000);
+  padding: 1px;
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: sigilSpin 18s linear infinite;
+}
+
+.fx::after {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  border-radius: calc(var(--radius) - 10px);
+  background:
+    radial-gradient(circle at 22% 45%, rgba(255, 255, 255, 0.06) 0 1px, transparent 2px),
+    radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.05) 0 1px, transparent 2px),
+    radial-gradient(circle at 48% 76%, rgba(255, 255, 255, 0.05) 0 1px, transparent 2px);
+  background-size: 280px 280px, 320px 320px, 360px 360px;
+  opacity: 0.18;
+  animation: innerStars 16s linear infinite;
+}
+
+.header {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  margin: 6px 0 16px;
+}
+
+.title {
+  font-family: "Marck Script", cursive;
+  font-weight: 400;
+  letter-spacing: 0.2px;
+  font-size: clamp(30px, 6.2vw, 42px);
+  line-height: 1.08;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.96);
+  text-shadow: 0 10px 28px rgba(255, 88, 128, 0.14);
+}
+
+.entry,
+.reveal {
+  position: relative;
+  z-index: 1;
+}
+
+.pin {
+  margin: 0;
+}
+
+.pinRow {
+  display: grid;
+  grid-template-columns: repeat(4, var(--cell));
+  gap: var(--gap);
+  justify-content: center;
+  margin: 14px 0 8px;
+}
+
+.progress {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 10px 0 8px;
+}
+
+.dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
+  transition: transform 180ms ease, background 180ms ease, box-shadow 180ms ease;
+}
+
+.dot.isOn {
+  background: rgba(255, 88, 128, 0.72);
+  box-shadow:
+    0 10px 28px rgba(255, 88, 128, 0.18),
+    0 0 0 4px rgba(255, 88, 128, 0.07);
+  transform: translateY(-1px) scale(1.06);
+}
+
+.pinCell {
+  width: var(--cell);
+  height: var(--cell);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.22);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 28px;
+  font-weight: 700;
+  text-align: center;
+  outline: none;
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.35),
+    inset 0 0 0 1px rgba(255, 88, 128, 0.04);
+  transition: transform 140ms ease, border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+  caret-color: transparent;
+}
+
+.pinCell.isPop {
+  animation: pop 180ms ease-out both;
+}
+
+.pinCell:focus {
+  transform: translateY(-1px);
+  border-color: rgba(255, 88, 128, 0.55);
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow:
+    0 14px 38px rgba(0, 0, 0, 0.45),
+    0 0 0 4px rgba(255, 88, 128, 0.10);
+}
+
+.hint {
+  min-height: 20px;
+  margin: 0;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--muted);
+}
+
+.hint.isError {
+  color: rgba(255, 88, 128, 0.92);
+}
+
+.reveal {
+  display: none;
+  text-align: center;
+  padding: 8px 0 2px;
+}
+
+.revealText {
+  margin: 10px 0 10px;
+  font-size: 16px;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.address {
+  margin: 0 auto 14px;
+  font-size: clamp(22px, 5.4vw, 30px);
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  line-height: 1.12;
+  max-width: 22ch;
+  text-shadow: 0 16px 46px rgba(255, 88, 128, 0.20);
+}
+
+.mapBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--tap);
+  padding: 0 18px;
+  min-width: min(320px, 92%);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: radial-gradient(140% 120% at 50% 0%, rgba(255, 88, 128, 0.36), rgba(155, 24, 54, 0.18));
+  color: rgba(255, 255, 255, 0.94);
+  font-weight: 700;
+  font-size: 16px;
+  text-decoration: none;
+  box-shadow:
+    0 16px 50px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 88, 128, 0.08) inset;
+  transition: transform 140ms ease, filter 140ms ease, box-shadow 160ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mapBtn:active {
+  transform: translateY(1px) scale(0.99);
+  filter: brightness(0.98);
+}
+
+/* Transitions */
+.entry {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 420ms ease, transform 420ms ease;
+}
+
+.screen.isUnlocked .entry {
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+}
+
+.screen.isUnlocked .reveal {
+  display: block;
+  animation: riseIn 520ms ease both;
+}
+
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* Wrong code micro-feedback */
+.screen.isWrong .card::before {
+  background: radial-gradient(circle at 50% 40%, rgba(255, 88, 128, 0.46), transparent 52%);
+}
+
+.screen.isWrong .card {
+  animation: shake 420ms ease both;
+}
+
+.screen.isWrong .pinCell {
+  border-color: rgba(255, 88, 128, 0.45);
+  box-shadow:
+    0 18px 55px rgba(0, 0, 0, 0.48),
+    0 0 0 4px rgba(255, 88, 128, 0.10);
+}
+
+.screen.isUnlocked .card {
+  animation: successGlow 720ms ease both;
+}
+
+@keyframes bgDrift {
+  0% {
+    background-position: 46% 42%, 52% 56%, 0 0;
+    filter: saturate(1.03);
+  }
+  100% {
+    background-position: 54% 50%, 45% 46%, 0 0;
+    filter: saturate(1.08);
+  }
+}
+
+@keyframes grainWander {
+  0% {
+    transform: translate3d(-2%, -1%, 0);
+  }
+  100% {
+    transform: translate3d(2%, 1%, 0);
+  }
+}
+
+@keyframes starsDrift {
+  0% {
+    transform: translate3d(-2%, -1%, 0);
+  }
+  100% {
+    transform: translate3d(2%, 1%, 0);
+  }
+}
+
+@keyframes glowPulse {
+  0%,
+  100% {
+    opacity: 0.78;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.03);
+  }
+}
+
+@keyframes sweep {
+  0%,
+  100% {
+    background-position: 0 0, 20% 40%;
+  }
+  50% {
+    background-position: 0 0, 82% 62%;
+  }
+}
+
+@keyframes sigilSpin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes innerStars {
+  0% {
+    background-position: 0 0, 0 0, 0 0;
+  }
+  100% {
+    background-position: 120px 80px, -140px 120px, 100px -140px;
+  }
+}
+
+@keyframes pop {
+  from {
+    transform: translateY(-1px) scale(1.12);
+  }
+  to {
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  18% {
+    transform: translateX(-6px);
+  }
+  36% {
+    transform: translateX(6px);
+  }
+  54% {
+    transform: translateX(-4px);
+  }
+  72% {
+    transform: translateX(4px);
+  }
+}
+
+@keyframes successGlow {
+  0% {
+    box-shadow: var(--shadow);
+    border-color: rgba(255, 255, 255, 0.10);
+  }
+  55% {
+    box-shadow:
+      0 22px 70px rgba(0, 0, 0, 0.58),
+      0 0 0 6px rgba(160, 255, 214, 0.08),
+      0 0 0 1px rgba(160, 255, 214, 0.20) inset;
+    border-color: rgba(160, 255, 214, 0.28);
+  }
+  100% {
+    box-shadow: var(--shadow);
+    border-color: rgba(255, 255, 255, 0.10);
+  }
+}
+
+@media (max-width: 360px) {
+  :root {
+    --cell: 58px;
+    --gap: 10px;
+  }
+  .card {
+    padding: 20px 14px 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body,
+  body::before,
+  body::after,
+  .card::before,
+  .card::after,
+  .fx::before,
+  .fx::after,
+  .entry,
+  .pinCell,
+  .mapBtn {
+    transition: none !important;
+    animation: none !important;
+  }
+  .screen.isUnlocked .reveal {
+    animation: none !important;
+  }
+}
+
